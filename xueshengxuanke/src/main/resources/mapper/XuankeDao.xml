@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dao.XuankeDao">
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        a.id as id
+        ,a.kecheng_id as kechengId
+        ,a.kemu_types as kemuTypes
+        ,a.jiaoshi_id as jiaoshiId
+        ,a.xingzhi_types as xingzhiTypes
+        ,a.shijian as shijian
+        ,a.didian as didian
+        ,a.xuefen as xuefen
+        ,a.zhouxueshi as zhouxueshi
+        ,a.rongliang as rongliang
+        ,a.yixuan as yixuan
+        ,a.yuliang as yuliang
+        ,a.beizhu_content as beizhuContent
+        ,a.create_time as createTime
+    </sql>
+    <select id="selectListView" parameterType="map" resultType="com.entity.view.XuankeView" >
+        SELECT
+        <include refid="Base_Column_List" />
+
+--         级联表的字段
+        ,jiaoshi.jsname as jsname
+        ,jiaoshi.jsusername as jsusername
+        ,jiaoshi.jspassword as jspassword
+        ,jiaoshi.jsimg_photo as jsimgPhoto
+        ,jiaoshi.jssex_types as jssexTypes
+        ,jiaoshi.jsphone as jsphone
+        ,jiaoshi.jsid_number as jsidNumber
+        ,jiaoshi.jsrole as jsrole
+        ,kecheng.kcname as kcname
+
+        FROM xuanke  a
+        left JOIN jiaoshi jiaoshi ON a.jiaoshi_id = jiaoshi.id
+        left JOIN kecheng kecheng ON a.kecheng_id = kecheng.id
+
+        <where>
+            <if test="params.kechengId != null">
+                and a.kecheng_id = #{params.kechengId}
+            </if>
+            <if test="params.kemuTypes != null">
+                and a.kemu_types = #{params.kemuTypes}
+            </if>
+            <if test="params.jiaoshiId != null">
+                and a.jiaoshi_id = #{params.jiaoshiId}
+            </if>
+            <if test="params.xingzhiTypes != null">
+                and a.xingzhi_types = #{params.xingzhiTypes}
+            </if>
+            <if test=" params.shijian != '' and params.shijian != null and params.shijian != 'null' ">
+                and a.shijian like CONCAT('%',#{params.shijian},'%')
+            </if>
+            <if test=" params.didian != '' and params.didian != null and params.didian != 'null' ">
+                and a.didian like CONCAT('%',#{params.didian},'%')
+            </if>
+            <if test="params.xuefenStart != null ">
+                <![CDATA[  and a.xuefen >= #{params.xuefenStart}   ]]>
+            </if>
+            <if test="params.xuefenEnd != null ">
+                <![CDATA[  and a.xuefen <= #{params.xuefenEnd}   ]]>
+            </if>
+            <if test=" params.zhouxueshi != '' and params.zhouxueshi != null and params.zhouxueshi != 'null' ">
+                and a.zhouxueshi like CONCAT('%',#{params.zhouxueshi},'%')
+            </if>
+            <if test="params.rongliangStart != null">
+                <![CDATA[  and a.rongliang >= #{params.rongliangStart}   ]]>
+            </if>
+            <if test="params.rongliangEnd != null">
+                <![CDATA[  and a.rongliang <= #{params.rongliangEnd}   ]]>
+            </if>
+            <if test="params.yixuanStart != null">
+                <![CDATA[  and a.yixuan >= #{params.yixuanStart}   ]]>
+            </if>
+            <if test="params.yixuanEnd != null">
+                <![CDATA[  and a.yixuan <= #{params.yixuanEnd}   ]]>
+            </if>
+            <if test="params.yuliangStart != null">
+                <![CDATA[  and a.yuliang >= #{params.yuliangStart}   ]]>
+            </if>
+            <if test="params.yuliangEnd != null">
+                <![CDATA[  and a.yuliang <= #{params.yuliangEnd}   ]]>
+            </if>
+            <if test=" params.beizhuContent != '' and params.beizhuContent != null and params.beizhuContent != 'null' ">
+                and a.beizhu_content like CONCAT('%',#{params.beizhuContent},'%')
+            </if>
+
+            <if test=" params.jsname != '' and params.jsname != null and params.jsname != 'null' ">
+                and jiaoshi.jsname like CONCAT('%',#{params.jsname},'%')
+            </if>
+            <if test=" params.jsusername != '' and params.jsusername != null and params.jsusername != 'null' ">
+                and jiaoshi.jsusername like CONCAT('%',#{params.jsusername},'%')
+            </if>
+            <if test=" params.jspassword != '' and params.jspassword != null and params.jspassword != 'null' ">
+                and jiaoshi.jspassword like CONCAT('%',#{params.jspassword},'%')
+            </if>
+            <if test="params.jssexTypes != null">
+                and jiaoshi.jssex_types = #{params.jssexTypes}
+            </if>
+
+            <if test=" params.jsphone != '' and params.jsphone != null and params.jsphone != 'null' ">
+                and jiaoshi.jsphone like CONCAT('%',#{params.jsphone},'%')
+            </if>
+            <if test=" params.jsidNumber != '' and params.jsidNumber != null and params.jsidNumber != 'null' ">
+                and jiaoshi.jsid_number like CONCAT('%',#{params.jsidNumber},'%')
+            </if>
+            <if test=" params.jsrole != '' and params.jsrole != null and params.jsrole != 'null' ">
+                and jiaoshi.jsrole like CONCAT('%',#{params.jsrole},'%')
+            </if>
+            <if test=" params.kcname != '' and params.kcname != null and params.kcname != 'null' ">
+                and kecheng.kcname like CONCAT('%',#{params.kcname},'%')
+            </if>
+        </where>
+        order by a.id desc
+    </select>
+
+</mapper>

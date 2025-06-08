@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dao.ChengjiDao">
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        a.id as id
+        ,a.yonghu_id as yonghuId
+        ,a.jiaoshi_id as jiaoshiId
+        ,a.kecheng_id as kechengId
+        ,a.fraction as fraction
+        ,a.create_time as createTime
+    </sql>
+    <select id="selectListView" parameterType="map" resultType="com.entity.view.ChengjiView" >
+        SELECT
+        <include refid="Base_Column_List" />
+
+--         级联表的字段
+        ,jiaoshi.jsname as jsname
+        ,jiaoshi.jsusername as jsusername
+        ,jiaoshi.jspassword as jspassword
+        ,jiaoshi.jsimg_photo as jsimgPhoto
+        ,jiaoshi.jssex_types as jssexTypes
+        ,jiaoshi.jsphone as jsphone
+        ,jiaoshi.jsid_number as jsidNumber
+        ,jiaoshi.jsrole as jsrole
+        ,kecheng.kcname as kcname
+        ,yonghu.name as name
+        ,yonghu.username as username
+        ,yonghu.password as password
+        ,yonghu.img_photo as imgPhoto
+        ,yonghu.sex_types as sexTypes
+        ,yonghu.phone as phone
+        ,yonghu.id_number as idNumber
+        ,yonghu.role as role
+
+        FROM chengji  a
+        left JOIN jiaoshi jiaoshi ON a.jiaoshi_id = jiaoshi.id
+        left JOIN kecheng kecheng ON a.kecheng_id = kecheng.id
+        left JOIN yonghu yonghu ON a.yonghu_id = yonghu.id
+
+        <where>
+            <if test="params.yonghuId != null">
+                and a.yonghu_id = #{params.yonghuId}
+            </if>
+            <if test="params.jiaoshiId != null">
+                and a.jiaoshi_id = #{params.jiaoshiId}
+            </if>
+            <if test="params.kechengId != null">
+                and a.kecheng_id = #{params.kechengId}
+            </if>
+            <if test="params.fractionStart != null ">
+                <![CDATA[  and a.fraction >= #{params.fractionStart}   ]]>
+            </if>
+            <if test="params.fractionEnd != null ">
+                <![CDATA[  and a.fraction <= #{params.fractionEnd}   ]]>
+            </if>
+
+            <if test=" params.jsname != '' and params.jsname != null and params.jsname != 'null' ">
+                and jiaoshi.jsname like CONCAT('%',#{params.jsname},'%')
+            </if>
+            <if test=" params.jsusername != '' and params.jsusername != null and params.jsusername != 'null' ">
+                and jiaoshi.jsusername like CONCAT('%',#{params.jsusername},'%')
+            </if>
+            <if test=" params.jspassword != '' and params.jspassword != null and params.jspassword != 'null' ">
+                and jiaoshi.jspassword like CONCAT('%',#{params.jspassword},'%')
+            </if>
+            <if test="params.jssexTypes != null">
+                and jiaoshi.jssex_types = #{params.jssexTypes}
+            </if>
+
+            <if test=" params.jsphone != '' and params.jsphone != null and params.jsphone != 'null' ">
+                and jiaoshi.jsphone like CONCAT('%',#{params.jsphone},'%')
+            </if>
+            <if test=" params.jsidNumber != '' and params.jsidNumber != null and params.jsidNumber != 'null' ">
+                and jiaoshi.jsid_number like CONCAT('%',#{params.jsidNumber},'%')
+            </if>
+            <if test=" params.jsrole != '' and params.jsrole != null and params.jsrole != 'null' ">
+                and jiaoshi.jsrole like CONCAT('%',#{params.jsrole},'%')
+            </if>
+            <if test=" params.kcname != '' and params.kcname != null and params.kcname != 'null' ">
+                and kecheng.kcname like CONCAT('%',#{params.kcname},'%')
+            </if>
+            <if test=" params.name != '' and params.name != null and params.name != 'null' ">
+                and yonghu.name like CONCAT('%',#{params.name},'%')
+            </if>
+            <if test=" params.username != '' and params.username != null and params.username != 'null' ">
+                and yonghu.username like CONCAT('%',#{params.username},'%')
+            </if>
+            <if test=" params.password != '' and params.password != null and params.password != 'null' ">
+                and yonghu.password like CONCAT('%',#{params.password},'%')
+            </if>
+            <if test="params.sexTypes != null">
+                and yonghu.sex_types = #{params.sexTypes}
+            </if>
+
+            <if test=" params.phone != '' and params.phone != null and params.phone != 'null' ">
+                and yonghu.phone like CONCAT('%',#{params.phone},'%')
+            </if>
+            <if test=" params.idNumber != '' and params.idNumber != null and params.idNumber != 'null' ">
+                and yonghu.id_number like CONCAT('%',#{params.idNumber},'%')
+            </if>
+            <if test=" params.role != '' and params.role != null and params.role != 'null' ">
+                and yonghu.role like CONCAT('%',#{params.role},'%')
+            </if>
+        </where>
+        order by a.id desc
+    </select>
+
+</mapper>
